@@ -12,8 +12,8 @@ echo "commiting the current change..."
 git commit -m "$commit_message"
 
 echo "Pushing origin under commit ${commit_message}..."
-sleep(0.5)
 
+sleep(1)
 git push origin main
 
 
