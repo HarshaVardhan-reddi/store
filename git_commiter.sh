@@ -13,7 +13,7 @@ git commit -m "$commit_message"
 
 echo "Pushing origin under commit ${commit_message}..."
 
-sleep(1)
+sleep 1
 git push origin main
 
 
