@@ -1,13 +1,43 @@
-# Store
+# Store API
 
-Simple go lang application which serves api data of store &amp; its products. Its a multi-tenant application where multiple stores will have multiple products
+A simple Go-based multi-tenant application that exposes APIs to manage stores, users, and their products. Built as a learning project to improve Go skills and experiment with different ORMs.
 
-## Tech stack
+## Tech Stack
 
-1. Programming language: Go Lang
-2. Database: MySQL
-3. Runner: Docker
+- **Language:** Go  
+- **Database:** MySQL  
+- **Runner:** Docker  
 
-## About the application
+## Overview
 
-As mentioned abobe this application provides an api interface for creating, updating and deleting the stores and their products
+This application provides REST APIs for:
+
+- Managing **Stores**
+- Managing **Products** under each store
+- Managing **Users** associated with stores
+- Handling **Authentication & Authorization** using JWT
+
+Each store acts as a separate tenant, allowing isolated user and product management within the same system.
+
+## Features
+
+- Multi-tenant architecture (multiple stores → multiple products & users)  
+- CRUD operations for stores  
+- CRUD operations for products  
+- CRUD operations for users  
+- **JWT-based Authentication & Authorization**  
+  - Secure login for users  
+  - Store-level authorization checks  
+  - Protected routes for product and store operations  
+- Clean and modular project structure  
+- ORM-friendly design
+
+## Purpose
+
+This project is created to:
+
+- Enhance Go development skills  
+- Explore and compare different Go ORMs  
+- Practice secure API development  
+- Learn JWT-based auth flows  
+- Build Dockerized service architecture
