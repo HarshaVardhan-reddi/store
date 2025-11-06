@@ -5,18 +5,18 @@ if [ -z "$commit_message" ]; then
   exit 1
 fi
 
-echo "staging the current changes..."
+echo -e "staging the current changes...\n"
 git add .
 
-echo "commiting the current change..."
+echo -e "commiting the current change...\n"
 git commit -m "$commit_message"
 
-echo "Pushing origin under commit '${commit_message}...'"
+echo -e "Pushing origin under commit '${commit_message}...\n'"
 
 # sleep 1
 git push origin main
 
 
-echo "Synced changes with origin!"
+echo -e "\n 🎉Synced changes with origin!"
 
 exit 0
