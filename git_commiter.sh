@@ -17,6 +17,6 @@ echo -e "Pushing origin under commit '\033[1;33m${commit_message}\033[0m'\n"
 git push origin main
 
 
-echo -e "\n 🎉Synced changes with origin!"
+echo -e "\n\033[32m🎉 Synced changes with origin!\033[0m"
 
 exit 0
