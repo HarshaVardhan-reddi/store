@@ -14,6 +14,7 @@ func main(){
 	r := mux.NewRouter() 
 	r.HandleFunc("/hello", helloForTesting).Methods("GET")
 
+	// Http server conf construction goes here
 	httpServer := config.ServerConfig.ConstructHttpServer(r) // constructing http server
 	if err := httpServer.ListenAndServe(); err != nil{
 		log.Fatal(err)
