@@ -1,6 +1,7 @@
 package config
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 	"log"
@@ -29,20 +30,22 @@ type DatabaseConfig struct{
 	Production DatabaseServer
 }
 
-var db_config = DatabaseConfig{}
+var DbConfig = DatabaseConfig{}
+var Database *sql.DB
+var DbConn *gorm.DB
 
 func init(){
 	content, err := os.ReadFile("config/database.yml")
 	if err != nil {
 		log.Fatal("Database configuration",err)
 	}
-	if err := yaml.Unmarshal(content,&db_config); err != nil{
+	if err := yaml.Unmarshal(content,&DbConfig); err != nil{
 		log.Fatal("Datatabase configuration",err)
 	}
 }
 
 func ConfigureMySQLServer(){
-	databaseServer, err := fetchEnvBasedDatabase(&db_config, "development")
+	databaseServer, err := fetchEnvBasedDatabase("development")
 	if err != nil {
 		log.Fatal("Database configuration", err)
 	}
@@ -59,17 +62,32 @@ func ConfigureMySQLServer(){
 	MySQLConfig := ormsql.Config{
 		DSNConfig: &rawMysqlConfig,
 	}
-	db, errInDBCon := gorm.Open(ormsql.New(MySQLConfig), &gorm.Config{})
+	var errInDBCon error
+	DbConn, errInDBCon = gorm.Open(ormsql.New(MySQLConfig), &gorm.Config{})
 	if(errInDBCon != nil){
 		log.Fatal("Database configuration", err)
 	}
-	log.Println("DB::",db)
+
+	var dbErr error
+	Database, dbErr = DbConn.DB()
+	if dbErr != nil {
+			log.Fatal("Failed to get DB instance:", err)
+	}
+	if pingErr := Database.Ping(); pingErr != nil{
+		log.Fatal(pingErr)
+	}
+	log.Println("Connection successful to the mysql db")
+	sqlRows, sqlErr := Database.Query("select * from ar_internal_metadata;") // example for querying data and checking connection
+	if sqlErr != nil{
+		log.Fatal(sqlErr)
+	}
+	log.Println(sqlRows.Columns())
 }
 
-func fetchEnvBasedDatabase(database_config *DatabaseConfig, env string) (*DatabaseServer, error) {
+func fetchEnvBasedDatabase(env string) (*DatabaseServer, error) {
 	switch(env){
 	case "development":
-		return &database_config.Development, nil
+		return &DbConfig.Development, nil
 	default:
 		return &DatabaseServer{}, errors.New("database configuration not found for the requesting environment")
 	}

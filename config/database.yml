@@ -1,7 +1,7 @@
 development:
   host: localhost
   port: 3306
-  database: local_db
+  database: empmng_development
   user: root
   password:
 

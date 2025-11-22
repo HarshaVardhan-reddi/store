@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"store/config"
-
 	"github.com/gorilla/mux"
 )
 
@@ -17,6 +16,7 @@ func main(){
 
 	// Http server conf construction goes here
 	httpServer := config.ServerConfig.ConstructHttpServer(r) // constructing http server
+	config.ConfigureMySQLServer()
 	if err := httpServer.ListenAndServe(); err != nil{
 		log.Fatal(err)
 	}
