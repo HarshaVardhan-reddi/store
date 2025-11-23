@@ -1,7 +1,7 @@
 development:
   host: localhost
   port: 3306
-  database: empmng_development
+  database: retail_chain
   user: root
   password:
 

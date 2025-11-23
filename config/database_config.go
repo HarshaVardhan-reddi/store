@@ -5,13 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/goccy/go-yaml"
 	ormsql "gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	_ "embed"
 )
 
 
@@ -30,15 +30,13 @@ type DatabaseConfig struct{
 	Production DatabaseServer
 }
 
+//go:embed database.yml
+var content []byte
 var DbConfig = DatabaseConfig{}
 var Database *sql.DB
 var DbConn *gorm.DB
 
 func init(){
-	content, err := os.ReadFile("config/database.yml")
-	if err != nil {
-		log.Fatal("Database configuration",err)
-	}
 	if err := yaml.Unmarshal(content,&DbConfig); err != nil{
 		log.Fatal("Datatabase configuration",err)
 	}
@@ -77,11 +75,11 @@ func ConfigureMySQLServer(){
 		log.Fatal(pingErr)
 	}
 	log.Println("Connection successful to the mysql db")
-	sqlRows, sqlErr := Database.Query("select * from ar_internal_metadata;") // example for querying data and checking connection
-	if sqlErr != nil{
-		log.Fatal(sqlErr)
-	}
-	log.Println(sqlRows.Columns())
+	// sqlRows, sqlErr := Database.Query("select * from ar_internal_metadata;") // example for querying data and checking connection
+	// if sqlErr != nil{
+	// 	log.Fatal(sqlErr)
+	// }
+	// log.Println(sqlRows.Columns())
 }
 
 func fetchEnvBasedDatabase(env string) (*DatabaseServer, error) {

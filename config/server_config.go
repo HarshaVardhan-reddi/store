@@ -5,11 +5,11 @@ import (
 	"errors"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"time"
 
 	"github.com/gorilla/mux"
+	_ "embed"
 )
 
 const SERVER_CONF_FILE string = "config/serverconfig.json"
@@ -21,6 +21,8 @@ const SERVER_CONFIG_INVALID = false
 const SERVER_PORT_MIN_RANGE = 1024
 const SERVER_PORT_MAX_RANGE = 49151
 
+//go:embed serverconfig.json
+var rawContent []byte
 var ServerConfig ServerConfiguration
 
 type ServerConfiguration struct{
@@ -31,10 +33,10 @@ type ServerConfiguration struct{
 }
 
 func init(){
-	rawContent, err := os.ReadFile(SERVER_CONF_FILE)
-	if err != nil{
-		log.Fatal("Server configuration",err)
-	}
+	// rawContent, err := os.ReadFile(SERVER_CONF_FILE)
+	// if err != nil{
+	// 	log.Fatal("Server configuration",err)
+	// }
 	if !json.Valid(rawContent) {
 		log.Fatal("Server configuration file has invalid content")
 	}
