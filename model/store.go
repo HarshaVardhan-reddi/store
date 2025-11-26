@@ -1,11 +1,11 @@
 package model
 
-import "gorm.io/gorm"
+// import "gorm.io/gorm"
 
 type Store struct{
-	gorm.Model
+	// gorm.Model
 	Name string
 	Description string
 	TagLine string
-	Type string
+	StoreCode string `gorm:"column:store_code"`
 }

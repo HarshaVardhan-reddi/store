@@ -35,7 +35,7 @@ func upCreateDbRetailChain(ctx context.Context, tx *sql.Tx) error {
 
 func downCreateDbRetailChain(ctx context.Context, tx *sql.Tx) error {
 	// This code is executed when the migration is rolled back.
-	_, err := tx.Exec("DROP TABLE stores")
+	_, err := tx.Exec("DROP TABLE stores;")
 	if err != nil{
 		log.Fatal(err)
 	}
