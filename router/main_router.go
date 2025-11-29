@@ -12,6 +12,7 @@ func MainRouter() *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/stores",controller.ListStores).Methods("GET")
 	r.HandleFunc("/stores",controller.CreateStore).Methods("POST")
+	r.HandleFunc("/stores/{id}",controller.GetStore).Methods("GET")
 	return r
 }
 

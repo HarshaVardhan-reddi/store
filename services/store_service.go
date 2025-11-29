@@ -48,3 +48,12 @@ func (s *StoreService) AddStore(store *model.Store) (*model.Store, error){
 func (s *StoreService) DummyStore() *model.Store {
 	return &model.Store{}
 }
+
+func (s *StoreService) FindStoreWithId(id int64)(*model.Store, error){
+	store := model.Store{}
+	result := config.DbConn.First(&store, id)
+	if err := result.Error; err != nil{
+		return nil, err
+	}
+	return &store, nil
+}
