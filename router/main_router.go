@@ -3,7 +3,7 @@ package router
 import (
 	// "fmt"
 	// "net/http"
-	controller "store/controller/v1"
+	controller "store/controllers/v1"
 
 	"github.com/gorilla/mux"
 )

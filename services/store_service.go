@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"store/config"
-	"store/model"
+	model "store/models"
 
 	// "gorm.io/gorm"
 )
