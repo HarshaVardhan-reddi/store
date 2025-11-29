@@ -10,7 +10,8 @@ import (
 
 func MainRouter() *mux.Router {
 	r := mux.NewRouter()
-	r.HandleFunc("/hello",controller.ListStores)
+	r.HandleFunc("/stores",controller.ListStores).Methods("GET")
+	r.HandleFunc("/stores",controller.CreateStore).Methods("POST")
 	return r
 }
 

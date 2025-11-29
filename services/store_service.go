@@ -5,10 +5,11 @@ import (
 	"log"
 	"store/config"
 	"store/model"
+
+	// "gorm.io/gorm"
 )
 
 type StoreService struct{
-	
 }
 
 func (s *StoreService) ListStores() *[]model.Store {
@@ -33,4 +34,17 @@ func (s *StoreService) ListStores() *[]model.Store {
 		fmt.Println("index:",index, "val:",val)
 	}
 	return &res
+}
+
+func (s *StoreService) AddStore(store *model.Store) (*model.Store, error){
+	result := config.DbConn.Create(&store)
+	if err := result.Error; err != nil{
+		return &model.Store{}, err
+	}
+	return store, nil
+}
+
+
+func (s *StoreService) DummyStore() *model.Store {
+	return &model.Store{}
 }
