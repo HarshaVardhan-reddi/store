@@ -14,7 +14,7 @@ import (
 )
 
 func ListStores(w http.ResponseWriter, r *http.Request){
-	store_service := &services.StoreService{}
+	store_service := initializeStoreService()
 	stores := store_service.ListStores()
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -24,7 +24,7 @@ func ListStores(w http.ResponseWriter, r *http.Request){
 func CreateStore(w http.ResponseWriter, r *http.Request){
 	w.Header().Add("Content-Type","application/json")
 	var response map[string]string = make(map[string]string, 0)
-	storeService := services.StoreService{}
+	storeService := initializeStoreService()
 	store := storeService.DummyStore()
 
 	if err := json.NewDecoder(r.Body).Decode(&store); err != nil{
@@ -54,7 +54,7 @@ func GetStore(w http.ResponseWriter, r *http.Request){
 	if err != nil{
 		log.Fatal(err)
 	}
-	store_service := services.StoreService{}
+	store_service := initializeStoreService()
 	store, errFinding := store_service.FindStoreWithId(int64(id))
 	if errFinding != nil{
 		w.WriteHeader(http.StatusPreconditionFailed)
@@ -62,4 +62,9 @@ func GetStore(w http.ResponseWriter, r *http.Request){
 	}
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(store)
+}
+
+
+func initializeStoreService() *services.StoreService {
+	return &services.StoreService{}
 }
