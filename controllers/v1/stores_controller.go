@@ -100,7 +100,7 @@ func UpdateStore(w http.ResponseWriter, r *http.Request){
 
 
 func DeleteStore(w http.ResponseWriter, r *http.Request){
-	w.Header().Add("Content-Type","application")
+	w.Header().Add("Content-Type","application/json")
 	storeService := initializeStoreService()
 	rawVars :=  mux.Vars(r)
 	rawID := rawVars["id"]
@@ -117,6 +117,7 @@ func DeleteStore(w http.ResponseWriter, r *http.Request){
 		statusCode := httpErrorCodeMappers(errDeletion)
 		w.WriteHeader(statusCode)
 		json.NewEncoder(w).Encode(map[string]string{"message":errDeletion.Error()})
+		return
 	}
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(store)
