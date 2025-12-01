@@ -68,13 +68,43 @@ func GetStore(w http.ResponseWriter, r *http.Request){
 	json.NewEncoder(w).Encode(store)
 }
 
+func UpdateStore(w http.ResponseWriter, r *http.Request){
+	w.Header().Add("Content-Type","application/json")
+	storeService := initializeStoreService()
+	vars := mux.Vars(r)
+	rawId := vars["id"]
+	if rawId == ""{
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{"message":"id is missing in the params"})
+	}
+	id, err := strconv.Atoi(rawId)
+	if err != nil{
+		log.Fatal(err)
+	}
+	payload := make(map[string]any,0)
+	json.NewDecoder(r.Body).Decode(&payload)
+	if len(payload) == 0{
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{"message":"no payload is being sent for updating store"})
+		return
+	}
+	store, updateErr :=  storeService.UpdateStoreWithID(int64(id), payload)
+	if updateErr != nil{
+		statusCode := httpErrorCodeMappers(updateErr)
+		w.WriteHeader(statusCode)
+		json.NewEncoder(w).Encode(updateErr.Error())
+		return
+	}
+	json.NewEncoder(w).Encode(store)
+}
+
 
 func initializeStoreService() *services.StoreService {
 	return &services.StoreService{}
 }
 
 
-func httpErrorCodeMappers(err error) uint {
+func httpErrorCodeMappers(err error) int {
 	if errors.Is(err,gorm.ErrRecordNotFound){
 		return http.StatusNotFound
 	}

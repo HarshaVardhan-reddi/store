@@ -45,6 +45,31 @@ func (s *StoreService) AddStore(store *model.Store) (*model.Store, error){
 }
 
 
+func (s *StoreService) UpdateStoreWithID(id int64, attributes map[string]any) (*model.Store, error){
+	store, err := s.FindStoreWithId(id)
+	if err != nil{
+		return store, err
+	}
+	log.Println(id, "iddd")
+	log.Println(attributes,"attributes")
+	config.DbConn.Model(store).Updates(attributes)
+	return store, nil
+}
+
+
+func (s *StoreService) DeleteStoreWithId(id int64) (*model.Store, error) {
+	store, err := s.FindStoreWithId(id)
+	if err != nil{
+		return store, err
+	}
+	deletion := config.DbConn.Delete(store)
+	if delerr := deletion.Error; delerr != nil{
+		return store,delerr
+	}
+	return store, nil
+}
+
+
 func (s *StoreService) DummyStore() *model.Store {
 	return &model.Store{}
 }
