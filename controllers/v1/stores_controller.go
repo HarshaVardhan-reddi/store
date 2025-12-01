@@ -3,6 +3,7 @@ package v1
 import (
 	// "fmt"
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"strconv"
@@ -11,6 +12,7 @@ import (
 	"store/services"
 
 	"github.com/gorilla/mux"
+	"gorm.io/gorm"
 )
 
 func ListStores(w http.ResponseWriter, r *http.Request){
@@ -57,8 +59,10 @@ func GetStore(w http.ResponseWriter, r *http.Request){
 	store_service := initializeStoreService()
 	store, errFinding := store_service.FindStoreWithId(int64(id))
 	if errFinding != nil{
-		w.WriteHeader(http.StatusPreconditionFailed)
-		json.NewEncoder(w).Encode(map[string]string{"message":err.Error()})
+		httpcode := httpErrorCodeMappers(errFinding)
+		w.WriteHeader(int(httpcode))
+		json.NewEncoder(w).Encode(map[string]string{"message":errFinding.Error()})
+		return
 	}
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(store)
@@ -67,4 +71,12 @@ func GetStore(w http.ResponseWriter, r *http.Request){
 
 func initializeStoreService() *services.StoreService {
 	return &services.StoreService{}
+}
+
+
+func httpErrorCodeMappers(err error) uint {
+	if errors.Is(err,gorm.ErrRecordNotFound){
+		return http.StatusNotFound
+	}
+	return http.StatusPreconditionFailed
 }

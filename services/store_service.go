@@ -50,10 +50,11 @@ func (s *StoreService) DummyStore() *model.Store {
 }
 
 func (s *StoreService) FindStoreWithId(id int64)(*model.Store, error){
-	store := model.Store{}
-	result := config.DbConn.First(&store, id)
+	store := model.Store{Id: id}
+	// result := config.DbConn.First(&store)
+	result := config.DbConn.Model(model.Store{Id: id}).First(&store)
 	if err := result.Error; err != nil{
-		return nil, err
+		return &store, err
 	}
 	return &store, nil
 }
