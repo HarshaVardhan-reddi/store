@@ -99,6 +99,30 @@ func UpdateStore(w http.ResponseWriter, r *http.Request){
 }
 
 
+func DeleteStore(w http.ResponseWriter, r *http.Request){
+	w.Header().Add("Content-Type","application")
+	storeService := initializeStoreService()
+	rawVars :=  mux.Vars(r)
+	rawID := rawVars["id"]
+	if rawID == ""{
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{"message":"ID is missing in the params"})
+	}
+	id, err := strconv.Atoi(rawID)
+	if err != nil{
+		log.Fatal(err)
+	}
+	store, errDeletion := storeService.DeleteStoreWithId(int64(id))
+	if errDeletion != nil{
+		statusCode := httpErrorCodeMappers(errDeletion)
+		w.WriteHeader(statusCode)
+		json.NewEncoder(w).Encode(map[string]string{"message":errDeletion.Error()})
+	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(store)
+}
+
+
 func initializeStoreService() *services.StoreService {
 	return &services.StoreService{}
 }
